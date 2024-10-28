@@ -6,13 +6,17 @@ const { randomUUID } = new ShortUniqueId({ length: 10 });
 // CREATE
 const handleCreateNewShortURL = async (req, res) => {
   const body = req.body;
+  let name = req.body.name;
+  if (!body.redirectUrl || body.redirectUrl == null) {
+    return res.status(400).json({ message: `Give a URL to shorten` });
+  }
   if (body.id) {
     let url = await Url.findOne({ shortId: body.id });
     if (!url) {
       url = new Url({
         shortId: body.id,
         redirectUrl: body.url,
-        name: body.name,
+        name: body.name || short.id,
       });
       url.save();
       return res.json({
@@ -28,7 +32,7 @@ const handleCreateNewShortURL = async (req, res) => {
     const url = new Url({
       shortId: id,
       redirectUrl: body.url,
-      name: body.name,
+      name: body.name || short.id,
     });
     url.save();
     return res.status(201).json({
@@ -61,7 +65,22 @@ const handleGetURLById = async (req, res) => {
   }
 };
 
-const handleGetAnalyticsById = (req, res) => {};
+const handleGetAnalyticsById = async (req, res) => {
+  const url = await Url.findOne({ shortId: req.params.id });
+  if (!url)
+    return res
+      .status(404)
+      .json({ Error_message: `No url found with id: ${url.shortId}` });
+  else {
+    return res
+      .status(200)
+      .json({
+        name: url.name,
+        totalClicks: url.visitHistory.length,
+        clicks: url.visitHistory,
+      });
+  }
+};
 
 // UPDATE
 const handleUpdateNameById = (req, res) => {};
