@@ -72,21 +72,41 @@ const handleGetAnalyticsById = async (req, res) => {
       .status(404)
       .json({ Error_message: `No url found with id: ${url.shortId}` });
   else {
-    return res
-      .status(200)
-      .json({
-        name: url.name,
-        totalClicks: url.visitHistory.length,
-        clicks: url.visitHistory,
-      });
+    return res.status(200).json({
+      name: url.name,
+      totalClicks: url.visitHistory.length,
+      clicks: url.visitHistory,
+    });
   }
 };
 
 // UPDATE
-const handleUpdateNameById = (req, res) => {};
+const handleUpdateNameById = async (req, res) => {
+  if (!req.body.name || req.body.name == null)
+    return res
+      .status(400)
+      .json({ Error_message: `Please give a name to update the record` });
+  else {
+    const url = await Url.findOneAndUpdate(
+      { shortId: req.params.id },
+      { name: req.body.name },
+      { new: true }
+    );
+    res.status(200).json({ message: `Name UPDATED to ${url.name}` });
+  }
+};
 
 // DELETE
-const handleDeleteURLById = (req, res) => {};
+const handleDeleteURLById = async (req, res) => {
+  const url = await Url.findOne({ shortId: req.params.id });
+  if (!url)
+    res
+      .status(404)
+      .json({ Error_message: `No URL found by id: ${req.params.id}` });
+  else {
+    url.deleteOne();
+  }
+};
 
 module.exports = {
   handleCreateNewShortURL,
