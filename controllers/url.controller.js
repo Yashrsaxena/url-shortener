@@ -38,9 +38,28 @@ const handleCreateNewShortURL = async (req, res) => {
 };
 
 // READ
-const handleGetAllURLs = async (req, res) => {};
+const handleGetAllURLs = async (req, res) => {
+  const urls = await Url.find({});
+  if (!urls) return res.status(404).json({ Error_message: `No url found` });
+  else {
+    return res.status(200).json({ message: urls });
+  }
+};
 
-const handleGetURLById = async (req, res) => {};
+const handleGetURLById = async (req, res) => {
+  const url = await Url.findOneAndUpdate(
+    { shortId: req.params.id },
+    { $push: { visitHistory: { clickTime: Date.now() } } },
+    { new: true }
+  );
+  if (!url)
+    return res
+      .status(404)
+      .json({ Error_message: `No url found with id: ${url.shortId}` });
+  else {
+    return res.status(200).redirect(url.redirectUrl);
+  }
+};
 
 const handleGetAnalyticsById = (req, res) => {};
 
