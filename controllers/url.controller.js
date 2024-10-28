@@ -98,13 +98,22 @@ const handleUpdateNameById = async (req, res) => {
 
 // DELETE
 const handleDeleteURLById = async (req, res) => {
-  const url = await Url.findOne({ shortId: req.params.id });
-  if (!url)
-    res
-      .status(404)
-      .json({ Error_message: `No URL found by id: ${req.params.id}` });
-  else {
-    url.deleteOne();
+  try {
+    const url = await Url.findOne({ shortId: req.params.id });
+    if (!url)
+      res
+        .status(404)
+        .json({ Error_message: `No URL found by id: ${req.params.id}` });
+    else {
+      await url.deleteOne();
+
+      return res.status(200).json({ message: "URL deleted successfully" });
+    }
+  } catch (error) {
+    console.error("Error deleting URL:", error);
+    return res
+      .status(500)
+      .json({ Error_message: "An error occurred while deleting the URL" });
   }
 };
 
