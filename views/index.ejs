@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Home</title>
+    </head>
+    <body>
+        <h1>URL Shortener</h1>
+        <% if (locals.id) { %> Generated URL:
+        <a href="http://localhost:<%= PORT %>/url/<%=id %>" target="_blank"
+            >http://localhost:<%= PORT %>/url/<%= id %></a
+        >
+        <% } %>
+        <div>
+            <form method="post" action="/url">
+                <p>
+                    <label>Give the URL: </label>
+                    <input
+                        placeholder="https://example.com"
+                        type="text"
+                        name="url"
+                    />
+                </p>
+                <p>
+                    <label>Give it a NAME: </label>
+                    <input placeholder="Example" type="text" name="name" />
+                </p>
+                <p>
+                    <label>Give the short URL (unique - optional): </label>
+                    <input placeholder="example" type="text" name="id" />
+                </p>
+                <button type="submit">Generate</button>
+            </form>
+        </div>
+    </body>
+</html>
