@@ -4,6 +4,19 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Home</title>
+        <style>
+            button {
+                background: none; /* Remove background color */
+                border: none; /* Remove border */
+                padding: 0; /* Remove padding */
+                outline: none; /* Remove outline on focus */
+                cursor: pointer; /* Set cursor to pointer for a clickable look */
+            }
+
+            button img {
+                display: block; /* Ensures the image within the button doesn't have any spacing */
+            }
+        </style>
     </head>
     <body>
         <h1>URL Shortener</h1>
@@ -33,5 +46,52 @@
                 <button type="submit">Generate</button>
             </form>
         </div>
+        <% if (locals.urls && locals.PORT) { %>
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Serial No.</th>
+                        <th>Name</th>
+                        <th>Short URL</th>
+                        <th>Clicks</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% urls.forEach((url, index) => { %>
+                    <tr>
+                        <td><%= index+1 %></td>
+                        <td><%= url.name %></td>
+                        <td>
+                            <a
+                                href="http://localhost:<%= PORT %>/url/<%= url.shortId %>"
+                                target="_blank"
+                                >http://localhost:<%= PORT %>/url/<%=
+                                url.shortId %></a
+                            >
+                        </td>
+                        <td><%= url.visitHistory.length %></td>
+                        <td>
+                            <form
+                                method="POST"
+                                action="/url/<%= url.shortId %>?_method=DELETE"
+                            >
+                                <button type="submit">
+                                    <img
+                                        width="25"
+                                        height="25"
+                                        src="https://img.icons8.com/plasticine/100/filled-trash.png"
+                                        alt="filled-trash"
+                                    />
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+        <% } %>
     </body>
 </html>

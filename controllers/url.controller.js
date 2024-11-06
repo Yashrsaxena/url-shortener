@@ -19,10 +19,7 @@ const handleCreateNewShortURL = async (req, res) => {
                 name: body.name || body.id,
             });
             url.save();
-            res.status(201).render("index", {
-                id: url.shortId,
-                PORT: process.env.PORT,
-            });
+            handleGetAllURLs(req, res);
         } else {
             return res.json({
                 Error_message: `Short Url unavailable, please select a unique one.`,
@@ -36,10 +33,7 @@ const handleCreateNewShortURL = async (req, res) => {
             name: body.name || id,
         });
         url.save();
-        res.status(201).render("index", {
-            id: url.shortId,
-            PORT: process.env.PORT,
-        });
+        handleGetAllURLs(req, res);
     }
 };
 
@@ -65,6 +59,7 @@ const handleGetURLById = async (req, res) => {
             .status(404)
             .json({ Error_message: `No url found with id: ${req.params.id}` });
     else {
+        handleGetAllURLs(req, res);
         return res.status(200).redirect(url.redirectUrl);
     }
 };
@@ -110,10 +105,7 @@ const handleDeleteURLById = async (req, res) => {
             });
         else {
             await url.deleteOne();
-
-            return res
-                .status(200)
-                .json({ message: "URL deleted successfully" });
+            handleGetAllURLs(req, res);
         }
     } catch (error) {
         console.error("Error deleting URL:", error);

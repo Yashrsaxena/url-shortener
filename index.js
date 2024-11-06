@@ -5,6 +5,7 @@ const { PORT, connectionStringToDatabase } = require("./utils/contants");
 const connectToDB = require("./utils/db_connection");
 const urlRouter = require("./routes/url.route");
 const staticRouter = require("./routes/static.route");
+const methodOverride = require("method-override");
 
 const app = express();
 app.set("view engine", "ejs");
@@ -13,6 +14,7 @@ app.set("views", path.resolve("./views"));
 // MIDDLEWARES
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(methodOverride("_method"));
 
 // CONNECTION TO DATABASE
 connectToDB(connectionStringToDatabase);
