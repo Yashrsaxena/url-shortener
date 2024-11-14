@@ -16,6 +16,16 @@
             button img {
                 display: block; /* Ensures the image within the button doesn't have any spacing */
             }
+            .generate {
+                background-color: green;
+                color: white;
+                padding: 5px;
+                border-radius: 5px;
+                box-shadow: 5px black;
+            }
+            iframe {
+                border-radius: 20px;
+            }
         </style>
     </head>
     <body>
@@ -40,10 +50,10 @@
                     <input placeholder="Example" type="text" name="name" />
                 </p>
                 <p>
-                    <label>Give the short URL (unique - optional): </label>
+                    <label>Choose a customized URL (unique - optional): </label>
                     <input placeholder="example" type="text" name="id" />
                 </p>
-                <button type="submit">Generate</button>
+                <button type="submit" class="generate">Generate</button>
             </form>
         </div>
         <% if (locals.urls && locals.PORT) { %>
@@ -93,5 +103,17 @@
             </table>
         </div>
         <% } %>
+        <div>
+            <iframe
+                width="560"
+                height="315"
+                src="https://www.youtube.com/embed/videoseries?si=dyCeJTZEw9SU1B6e&amp;list=PLC3y8-rFHvwjOKd6gdf4QtV1uYNiQnruI"
+                title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen
+            ></iframe>
+        </div>
     </body>
 </html>

@@ -48,21 +48,21 @@ const handleGetAllURLs = async (req, res) => {
     }
 };
 
-const handleGetURLById = async (req, res) => {
-    const url = await Url.findOneAndUpdate(
-        { shortId: req.params.id },
-        { $push: { visitHistory: { clickTime: Date.now() } } },
-        { new: true }
-    );
-    if (!url)
-        return res
-            .status(404)
-            .json({ Error_message: `No url found with id: ${req.params.id}` });
-    else {
-        handleGetAllURLs(req, res);
-        return res.status(200).redirect(url.redirectUrl);
-    }
-};
+// const handleGetURLById = async (req, res) => {
+//     const url = await Url.findOneAndUpdate(
+//         { shortId: req.params.id },
+//         { $push: { visitHistory: { clickTime: Date.now() } } },
+//         { new: true }
+//     );
+//     if (!url)
+//         return res
+//             .status(404)
+//             .json({ Error_message: `No url found with id: ${req.params.id}` });
+//     else {
+//         handleGetAllURLs(req, res);
+//         return res.status(200).redirect(url.redirectUrl);
+//     }
+// };
 
 const handleGetAnalyticsById = async (req, res) => {
     const url = await Url.findOne({ shortId: req.params.id });
@@ -115,11 +115,38 @@ const handleDeleteURLById = async (req, res) => {
     }
 };
 
+//Helping Functions
+const updateVisitHistory = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const url = await Url.findOneAndUpdate(
+            { shortId: id },
+            { $push: { visitHistory: { clickTime: Date.now() } } },
+            { new: true }
+        );
+        if (!url) {
+            return res
+                .status(404)
+                .json({ Error_message: `No url found with id: ${id}` });
+        }
+        req.urlData = url;
+        next();
+    } catch (error) {
+        return res.status(500).json({ error: "Error updating visit history" });
+    }
+};
+
+const handleRedirectToUrl = (req, res) => {
+    const { redirectUrl } = req.urlData; // URL data from middleware
+    res.redirect(redirectUrl);
+};
+
 module.exports = {
     handleCreateNewShortURL,
     handleGetAllURLs,
-    handleGetURLById,
     handleGetAnalyticsById,
     handleUpdateNameById,
     handleDeleteURLById,
+    updateVisitHistory,
+    handleRedirectToUrl,
 };

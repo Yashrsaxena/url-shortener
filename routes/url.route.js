@@ -2,10 +2,11 @@ const express = require("express");
 const {
     handleCreateNewShortURL,
     handleGetAllURLs,
-    handleGetURLById,
     handleUpdateNameById,
     handleDeleteURLById,
     handleGetAnalyticsById,
+    updateVisitHistory,
+    handleRedirectToUrl,
 } = require("../controllers/url.controller");
 
 const router = express.Router();
@@ -16,7 +17,7 @@ router.get("/", handleGetAllURLs);
 
 router
     .route("/:id")
-    .get(handleGetURLById)
+    .get(updateVisitHistory, handleRedirectToUrl)
     .patch(handleUpdateNameById)
     .delete(handleDeleteURLById);
 
